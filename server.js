@@ -5,7 +5,15 @@ var express = require('express'),
     serverPort = 8080,
     eventData = [],
     LINQ = require('node-linq').LINQ,
-    eventSockets = [];
+    eventSockets = [],
+    path = require('path'),
+    fs = require('fs');
+
+var options = {
+    key: fs.readFileSync(path.join(__dirname, 'keys/kazastream.key')),
+    cert: fs.readFileSync(path.join(__dirname, 'keys/542cc3f680793cdf.crt')),
+    ca: [fs.readFileSync('keys/1.crt'), fs.readFileSync('keys/2.crt'), fs.readFileSync('keys/3.crt')]
+};
 
 var server = http.createServer(app);
 var io = socketIo.listen(server);
@@ -29,7 +37,7 @@ io.on('connection', function (socket) {
             clients = getClientsByEvent(drawEvent);
 
         var emit = new LINQ(clients).All(function (item) {
-            item.emit('draw_line',{
+            item.emit('draw_line', {
                 line: data.line
             });
         });
