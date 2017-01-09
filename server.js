@@ -1,6 +1,6 @@
 var express = require('express'),
     app = express(),
-    http = require('http'),
+    https = require('https'),
     socketIo = require('socket.io'),
     serverPort = 8000,
     eventData = [],
@@ -15,9 +15,8 @@ var options = {
     ca: [fs.readFileSync('keys/1.crt'), fs.readFileSync('keys/2.crt'), fs.readFileSync('keys/3.crt')]
 };
 
-var server = http.createServer(app);
+var server = https.createServer(options, app).listen(serverPort);;
 var io = socketIo.listen(server);
-server.listen(serverPort);
 app.use(express.static(__dirname + '/static'));
 console.log("Server running on localhost:" + serverPort);
 
